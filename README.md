@@ -1,101 +1,242 @@
+
+# Project Title
+
+A brief description of what this project does and who it's for
+
 # TaskFlow
 
-Aplicación web de gestión de tareas enfocada en la organización personal, planificación y seguimiento de actividades diarias.
+TaskFlow is a web-based task management application designed to help users organize, track, and manage their daily activities efficiently. It provides a clean interface, calendar-based planning, and task prioritization tools to improve productivity and workflow visibility.
 
 ---
 
-# Descripción General
+## Overview
 
-TaskFlow es una aplicación web que permite a los usuarios crear, organizar y gestionar tareas de manera eficiente mediante una interfaz intuitiva y fácil de usar.
+TaskFlow allows users to create and manage tasks with different priorities, categories, and due dates. The application includes a calendar view for scheduling and a real-time dashboard for tracking progress and task status.
 
-El proyecto simula un sistema de productividad personal donde los usuarios pueden registrar tareas, asignar prioridades, clasificarlas por categorías y visualizar su progreso a través de un calendario y un panel de seguimiento.
-
-Su objetivo es mejorar la organización del tiempo y facilitar el control de actividades pendientes, vencidas y completadas.
+The system is built entirely with frontend technologies and uses local storage for data persistence.
 
 ---
 
-# Tecnologías Utilizadas
+## Key Features
 
-- HTML5
-- CSS3
-- JavaScript (Vanilla JS)
-- Bootstrap 5
-- LocalStorage API
-- Git y GitHub para control de versiones
-
-### Herramientas de apoyo
-
-- GitHub Copilot (asistencia en desarrollo de código)
-- ChatGPT (apoyo en documentación, estructura y optimización del proyecto)
-
----
-
-# Funcionalidades
-
-- Creación de nuevas tareas.
-- Edición de tareas existentes.
-- Eliminación de tareas.
-- Marcado de tareas completadas.
-- Gestión de prioridades (Alta, Media y Baja).
-- Organización por categorías (Personal, Trabajo, Estudios y Salud).
-- Visualización de tareas en calendario mensual.
-- Seguimiento de tareas pendientes, completadas y vencidas.
-- Barra de progreso en tiempo real.
-- Sistema de búsqueda de tareas.
-- Filtros por categoría, prioridad y estado.
-- Modo oscuro (Dark Mode).
-- Diseño responsive para dispositivos móviles y escritorio.
-- Persistencia de datos mediante LocalStorage.
-
-### Funcionalidad dinámica implementada
-
-- Gestión completa de tareas con almacenamiento local y actualización automática de la interfaz sin necesidad de recargar la página.
+- Task creation, editing, and deletion  
+- Task categorization (Personal, Work, Study, Health)  
+- Priority management (High, Medium, Low)  
+- Calendar-based task visualization  
+- Daily, overdue, and completion tracking  
+- Progress monitoring system  
+- Search and filter functionality  
+- Dark mode support  
+- Responsive design for mobile and desktop  
+- Persistent storage using browser local storage  
 
 ---
 
-# Instrucciones de Uso
+## Technologies Used
 
-
-## Ejecución local
-
-1. Clonar el repositorio:
-
-```bash
-git clone https://github.com/tu-usuario/taskflow.git
-```
-
-2. Ingresar a la carpeta del proyecto:
-
-```bash
-cd taskflow
-```
-
-3. Abrir el archivo `index.html` en cualquier navegador moderno.
-
-No requiere instalación de dependencias adicionales.
+- HTML5  
+- CSS3 (Flexbox and Grid layout)  
+- JavaScript (Vanilla)  
+- Bootstrap 5  
+- LocalStorage API  
 
 ---
 
-# Estructura del Proyecto
+## Project Structure
 
-```text
+
 TaskFlow/
-│
-├── index.html           # Página principal
-├── dashboard.html       # Panel de control de tareas
-│
+├── index.html
+├── dashboard.html
 ├── css/
-│   └── style.css        # Estilos de la aplicación
-│
+│ └── style.css
 ├── js/
-│   ├── tasks.js         # Gestión de tareas
-│   └── auth.js          # Funciones de autenticación
-│
-└── README.md            # Documentación del proyecto
-```
+│ ├── tasks.js
+│ └── auth.js
+└── README.md
+
 
 ---
 
-# Autor
+## Installation and Usage
 
-**Joaquín Soto**
+### Local Setup
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/taskflow.git
+Navigate to the project directory
+Open index.html in any modern web browser
+
+No additional dependencies or build steps are required.
+
+Deployment
+
+This project can be deployed using static hosting services such as:
+
+Netlify
+Vercel
+GitHub Pages
+
+For Netlify deployment, simply connect the repository and set the root directory as the publish folder.
+
+Core Functionality
+Task Management
+
+Users can create tasks with a title, due date, category, and priority level. Tasks can be marked as completed or deleted at any time.
+
+Calendar System
+
+Tasks are automatically displayed in a monthly calendar view, allowing users to visualize workload distribution across days.
+
+Filtering System
+
+Tasks can be filtered by status, category, or priority, enabling efficient task organization.
+
+Progress Tracking
+
+The application calculates task completion percentage and displays progress in real time.
+
+Future Improvements
+Backend integration with user authentication
+Cloud database synchronization
+Notifications and reminders
+Drag and drop task scheduling
+Multi-device synchronization
+Advanced analytics dashboard
+License
+
+This project is intended for educational and portfolio purposes. Commercial use requires prior authorization from the author.
+
+Author
+
+Developed by Joaquin Soto
+Frontend project focused on productivity systems and interface design.
+## Other Common Github Profile Sections
+👩‍💻 I'm currently working on...
+
+🧠 I'm currently learning...
+
+👯‍♀️ I'm looking to collaborate on...
+
+🤔 I'm looking for help with...
+
+💬 Ask me about...
+
+📫 How to reach me...
+
+😄 Pronouns...
+
+⚡️ Fun fact...
+
+# TaskFlow
+
+TaskFlow is a web-based task management application designed to help users organize, track, and manage their daily activities efficiently. It provides a clean interface, calendar-based planning, and task prioritization tools to improve productivity and workflow visibility.
+
+---
+
+## Overview
+
+TaskFlow allows users to create and manage tasks with different priorities, categories, and due dates. The application includes a calendar view for scheduling and a real-time dashboard for tracking progress and task status.
+
+The system is built entirely with frontend technologies and uses local storage for data persistence.
+
+---
+
+## Key Features
+
+- Task creation, editing, and deletion  
+- Task categorization (Personal, Work, Study, Health)  
+- Priority management (High, Medium, Low)  
+- Calendar-based task visualization  
+- Daily, overdue, and completion tracking  
+- Progress monitoring system  
+- Search and filter functionality  
+- Dark mode support  
+- Responsive design for mobile and desktop  
+- Persistent storage using browser local storage  
+
+---
+
+## Technologies Used
+
+- HTML5  
+- CSS3 (Flexbox and Grid layout)  
+- JavaScript (Vanilla)  
+- Bootstrap 5  
+- LocalStorage API  
+
+---
+
+## Project Structure
+
+
+TaskFlow/
+├── index.html
+├── dashboard.html
+├── css/
+│ └── style.css
+├── js/
+│ ├── tasks.js
+│ └── auth.js
+└── README.md
+
+
+---
+
+## Installation and Usage
+
+### Local Setup
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/taskflow.git
+Navigate to the project directory
+Open index.html in any modern web browser
+
+No additional dependencies or build steps are required.
+
+Deployment
+
+This project can be deployed using static hosting services such as:
+
+Netlify
+Vercel
+GitHub Pages
+
+For Netlify deployment, simply connect the repository and set the root directory as the publish folder.
+
+Core Functionality
+Task Management
+
+Users can create tasks with a title, due date, category, and priority level. Tasks can be marked as completed or deleted at any time.
+
+Calendar System
+
+Tasks are automatically displayed in a monthly calendar view, allowing users to visualize workload distribution across days.
+
+Filtering System
+
+Tasks can be filtered by status, category, or priority, enabling efficient task organization.
+
+Progress Tracking
+
+The application calculates task completion percentage and displays progress in real time.
+
+Future Improvements
+Backend integration with user authentication
+Cloud database synchronization
+Notifications and reminders
+Drag and drop task scheduling
+Multi-device synchronization
+Advanced analytics dashboard
+License
+
+This project is intended for educational and portfolio purposes. Commercial use requires prior authorization from the author.
+
+Author
+
+Developed by Joaquin Soto
+Frontend project focused on productivity systems and interface design.
