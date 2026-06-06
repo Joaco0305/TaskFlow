@@ -89,3 +89,21 @@ authForm.addEventListener("submit", (e) => {
     }
 
 });
+const loginForm = document.getElementById("loginForm");
+
+loginForm.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const username =
+    document.getElementById("username").value;
+
+    localStorage.setItem(
+        "taskflowUser",
+        username
+    );
+
+    window.location.href =
+    "dashboard.html";
+
+});

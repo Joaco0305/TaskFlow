@@ -5,7 +5,7 @@ if (!user) {
 }
 
 document.getElementById("welcomeUser").textContent =
-    `Bienvenido, ${user}`;
+    user;
 
 document.getElementById("settingsUser").textContent =
     user;
@@ -18,6 +18,7 @@ let allTasks =
     JSON.parse(localStorage.getItem(`${user}-tasks`)) || [];
 
 let editingId = null;
+let modalEditingId = null;
 
 let currentDate = new Date();
 
@@ -230,6 +231,38 @@ filterTasks.addEventListener(
     "change",
     renderTasks
 );
+function showToast(message,type = "success"){
+
+    const container =
+    document.getElementById("toastContainer");
+
+    if(!container) return;
+
+    const toast =
+    document.createElement("div");
+
+    toast.className =
+    `custom-toast ${type}`;
+
+    toast.textContent =
+    message;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("show");
+    },100);
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+
+        setTimeout(() => {
+            toast.remove();
+        },300);
+
+    },3000);
+
+}
 
 function saveOrUpdateTask() {
 
@@ -264,6 +297,7 @@ function saveOrUpdateTask() {
         editingId = null;
         addTaskBtn.textContent =
             "Agregar";
+            showToast("✏️ Tarea actualizada correctamente","info");
 
     } else {
 
@@ -276,6 +310,7 @@ function saveOrUpdateTask() {
     completed: false,
     owner: user
 });
+showToast("✅ Tarea creada correctamente","success");
 
     }
 
@@ -361,72 +396,247 @@ function renderTasks() {
     const percent = total === 0
         ? 0
         : Math.round((completed / total) * 100);
+        const heroGreeting =
+document.getElementById(
+    "heroGreeting"
+);
+
+const heroSubtitle =
+document.getElementById(
+    "heroSubtitle"
+);
+
+if(heroGreeting && heroSubtitle){
+
+    const hour =
+    new Date().getHours();
+
+    let greeting = "Hola";
+
+    if(hour < 12){
+        greeting = "☀️ Buenos días";
+    }
+    else if(hour < 19){
+        greeting = "🌤️ Buenas tardes";
+    }
+    else{
+        greeting = "🌙 Buenas noches";
+    }
+
+    heroGreeting.textContent =
+    `${greeting}, ${user}`;
+
+    const pending =
+    userTasks.filter(
+        t => !t.completed
+    ).length;
+
+    if(pending === 0){
+
+        heroSubtitle.textContent =
+        "🎉 No tienes tareas pendientes. Todo está al día.";
+
+    }
+
+    else if(dueToday > 0){
+
+        heroSubtitle.textContent =
+        `Tienes ${pending} tareas pendientes y ${dueToday} vencen hoy.`;
+
+    }
+
+    else{
+
+        heroSubtitle.textContent =
+        `Tienes ${pending} tareas pendientes. Sigue avanzando 🚀`;
+
+    }
+
+}
 
     document.getElementById("progressPercent").textContent = percent + "%";
     document.getElementById("progressBar").style.width = percent + "%";
+    const sidebarCompletedTasks =
+document.getElementById("sidebarCompletedTasks");
+
+const sidebarProductivity =
+document.getElementById("sidebarProductivity");
+
+const sidebarStreak =
+document.getElementById("sidebarStreak");
+
+if(sidebarCompletedTasks){
+    sidebarCompletedTasks.textContent =
+    completed;
+}
+
+if(sidebarProductivity){
+    sidebarProductivity.textContent =
+    percent + "%";
+}
+
+if(sidebarStreak){
+
+    const completedWithDate =
+    getUserTasks()
+    .filter(task => task.completed && task.date)
+    .map(task => task.date);
+
+    const uniqueDates =
+    [...new Set(completedWithDate)]
+    .sort()
+    .reverse();
+
+    let streak = 0;
+
+    let checkingDate =
+    new Date();
+
+    while(true){
+
+        const dateString =
+        checkingDate
+        .toISOString()
+        .split("T")[0];
+
+        if(uniqueDates.includes(dateString)){
+
+            streak++;
+
+            checkingDate.setDate(
+                checkingDate.getDate() - 1
+            );
+
+        } else {
+
+            break;
+
+        }
+
+    }
+
+    sidebarStreak.textContent =
+    streak + " días";
+
+}
 
     userTasks.forEach(task => {
 
         let badgeClass = "priority-medium";
 
-        if (task.priority === "Alta") badgeClass = "priority-high";
-        if (task.priority === "Baja") badgeClass = "priority-low";
+if(task.priority === "Alta"){
+    badgeClass = "priority-high";
+}
+
+if(task.priority === "Baja"){
+    badgeClass = "priority-low";
+}
+
+let categoryClass = "category-personal";
+let categoryIcon = "👤";
+
+if(task.category === "Trabajo"){
+    categoryClass = "category-work";
+    categoryIcon = "💼";
+}
+
+if(task.category === "Estudio"){
+    categoryClass = "category-study";
+    categoryIcon = "📚";
+}
+
+if(task.category === "Salud"){
+    categoryClass = "category-health";
+    categoryIcon = "❤️";
+}
 
         const li = document.createElement("li");
         li.className = "list-group-item";
 
-        li.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
+         li.innerHTML = `
 
-                <div>
+         <div class="task-premium-item ${task.completed ? "task-done" : ""}">
 
-                    <div class="mb-2">
+         <button
+            class="task-check-btn ${task.completed ? "checked" : ""}"
+            onclick="toggleTask(${task.id})">
+            ${task.completed ? "✓" : ""}
+         </button>
 
-                        <input
-                            type="checkbox"
-                            ${task.completed ? "checked" : ""}
-                            onchange="toggleTask(${task.id})"
-                        >
+            <div class="task-premium-info">
 
-                        <strong style="text-decoration:${task.completed ? "line-through" : "none"}">
-                            ${task.text}
-                        </strong>
+            <div class="task-title-row">
 
-                    </div>
+    <h4>
+        ${task.text}
+    </h4>
 
-                    <small>
-                        📅 ${task.date || "Sin fecha"}
-                    </small>
+    ${
+        task.completed
+        ? `<span class="completed-pill">Completada</span>`
+        : ""
+    }
 
-                    <div class="mt-2">
-                        <span class="priority-badge ${badgeClass}">
-                            ${task.priority}
-                        </span>
+</div>
 
-                        <span class="badge bg-secondary ms-2">
-                            ${task.category || "Personal"}
-                        </span>
-                    </div>
+            <div class="task-premium-meta">
 
-                </div>
+                <span class="date-pill">
+    📅 ${task.date || "Sin fecha"}
+</span>
 
-                <div class="d-flex gap-2">
+                <span class="priority-badge ${badgeClass}">
 
-                    <button class="btn btn-primary btn-sm" onclick="editTask(${task.id})">
-                        Editar
-                    </button>
+                 <span class="pill-dot"></span>
 
-                    <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">
-                        Eliminar
-                    </button>
+                    ${task.priority}
 
-                </div>
+                </span>
+
+             <span class="task-category-pill ${categoryClass}">
+    ${categoryIcon} ${task.category || "Personal"}
+</span>
 
             </div>
-        `;
+
+        </div>
+
+        <div class="task-premium-actions">
+
+            <button
+                class="edit-premium-btn"
+                onclick="editTask(${task.id})"
+            >
+                ✏️ Editar
+            </button>
+
+            <button
+                class="delete-premium-btn"
+                onclick="deleteTask(${task.id})"
+            >
+                🗑️ Eliminar
+            </button>
+
+        </div>
+
+    </div>
+
+ `;
 
         taskList.appendChild(li);
     });
+    const emptyState =
+document.getElementById("emptyState");
+
+if(emptyState){
+
+    if(userTasks.length === 0){
+        emptyState.style.display = "flex";
+    } else {
+        emptyState.style.display = "none";
+    }
+
+} 
 }
 
 /* =========================
@@ -443,25 +653,97 @@ function editTask(id) {
 
     if (!task) return;
 
-    taskInput.value =
+    modalEditingId = id;
+
+    document.getElementById("editTaskInput").value =
         task.text;
 
-    taskDate.value =
+    document.getElementById("editTaskDate").value =
         task.date;
 
-    taskPriority.value =
+    document.getElementById("editTaskPriority").value =
         task.priority;
-    
-    taskCategory.value =
-    task.category || "Personal";
 
-    editingId = id;
+    document.getElementById("editTaskCategory").value =
+        task.category || "Personal";
 
-    addTaskBtn.textContent =
-        "Guardar cambios";
+    document
+    .getElementById("editTaskModal")
+    .classList
+    .remove("hidden");
+
 }
 
 window.editTask = editTask;
+function closeEditModal(){
+
+    modalEditingId = null;
+
+    document
+    .getElementById("editTaskModal")
+    .classList
+    .add("hidden");
+
+}
+
+window.closeEditModal =
+closeEditModal;
+
+function saveEditModal(){
+
+    if(modalEditingId === null){
+        return;
+    }
+
+    const task =
+    allTasks.find(
+        t => t.id === modalEditingId &&
+        t.owner === user
+    );
+
+    if(!task){
+        return;
+    }
+
+    const newText =
+    document
+    .getElementById("editTaskInput")
+    .value
+    .trim();
+
+    if(!newText){
+        alert("La tarea no puede estar vacía");
+        return;
+    }
+
+    task.text =
+    newText;
+
+    task.date =
+    document.getElementById("editTaskDate").value;
+
+    task.priority =
+    document.getElementById("editTaskPriority").value;
+
+    task.category =
+    document.getElementById("editTaskCategory").value;
+
+    saveTasks();
+    renderTasks();
+    renderCalendar();
+    renderAlerts();
+
+    closeEditModal();
+
+    showToast(
+        "✏️ Tarea actualizada correctamente",
+        "info"
+    );
+
+}
+
+window.saveEditModal =
+saveEditModal;
 
 /* =========================
    COMPLETAR
@@ -479,6 +761,11 @@ function toggleTask(id) {
 
     task.completed =
         !task.completed;
+        if(task.completed){
+    showToast("🎉 Tarea completada","success");
+} else {
+    showToast("↩️ Tarea marcada como pendiente","info");
+}
 
     saveTasks();
     renderTasks();
@@ -498,7 +785,8 @@ function deleteTask(id) {
             t => !(t.id === id &&
             t.owner === user)
         );
-
+    
+    showToast("🗑️ Tarea eliminada","danger");
     saveTasks();
 
     renderTasks();
@@ -507,6 +795,36 @@ function deleteTask(id) {
 }
 
 window.deleteTask = deleteTask;
+function deleteTaskFromCalendar(id){
+
+    const confirmDelete =
+    confirm("¿Eliminar esta tarea?");
+
+    if(!confirmDelete){
+        return;
+    }
+
+    allTasks =
+    allTasks.filter(
+        task => !(task.id === id && task.owner === user)
+    );
+    showToast("🗑️ Tarea eliminada","danger");
+    saveTasks();
+    renderTasks();
+    renderCalendar();
+    renderAlerts();
+
+    const panel =
+    document.getElementById("dayTasksPanel");
+
+    if(panel){
+        panel.classList.add("hidden");
+    }
+
+}
+
+window.deleteTaskFromCalendar =
+deleteTaskFromCalendar;
 
 /* =========================
    CALENDARIO
@@ -520,10 +838,10 @@ function renderCalendar() {
     if (!grid || !title) return;
 
     const months = [
-        "Enero","Febrero","Marzo",
-        "Abril","Mayo","Junio",
-        "Julio","Agosto","Septiembre",
-        "Octubre","Noviembre","Diciembre"
+        "Enero", "Febrero", "Marzo",
+        "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre",
+        "Octubre", "Noviembre", "Diciembre"
     ];
 
     const year = currentDate.getFullYear();
@@ -534,98 +852,201 @@ function renderCalendar() {
     grid.innerHTML = "";
 
     const firstDay = new Date(year, month, 1);
+
     let startDay = firstDay.getDay();
     startDay = startDay === 0 ? 6 : startDay - 1;
 
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInMonth =
+        new Date(year, month + 1, 0).getDate();
 
-    // espacios vacíos antes del día 1
     for (let i = 0; i < startDay; i++) {
         grid.appendChild(document.createElement("div"));
     }
 
     const userTasks = getUserTasks();
-    const today = new Date().toISOString().split("T")[0];
+
+    const today =
+        new Date()
+        .toISOString()
+        .split("T")[0];
 
     for (let day = 1; day <= daysInMonth; day++) {
 
         const dateStr =
             `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
-        const tasks = userTasks.filter(t => t.date === dateStr);
+        const tasks =
+            userTasks.filter(
+                task => task.date === dateStr
+            );
 
-        let dayClass = "calendar-day";
+        const cell =
+            document.createElement("div");
 
-        const hasTasks = tasks.length > 0;
-        const hasOverdue = tasks.some(t => !t.completed && t.date < today);
-        const hasToday = tasks.some(t => t.date === today && !t.completed);
+        cell.className = "calendar-day";
 
-        if (hasOverdue) {
-            dayClass = "calendar-day overdue";
-        } else if (hasToday) {
-            dayClass = "calendar-day today";
-        } else if (hasTasks) {
-            dayClass = "calendar-day has-tasks";
+        if (tasks.length > 0) {
+            cell.classList.add("has-tasks");
         }
 
-        const cell = document.createElement("div");
-        cell.className = dayClass;
+        if (dateStr === today) {
+            cell.classList.add("current-day");
+        }
 
-        // click rápido para crear tarea en ese día
-        cell.addEventListener("click", () => {
+        const hasOverdue =
+            tasks.some(
+                task => !task.completed && task.date < today
+            );
 
-    const panel = document.getElementById("dayTasksPanel");
-    const list = document.getElementById("dayTasksList");
-    const title = document.getElementById("dayTasksTitle");
+        const hasToday =
+            tasks.some(
+                task => !task.completed && task.date === today
+            );
 
-    const tasks = userTasks.filter(t => t.date === dateStr);
+        if (hasOverdue) {
+            cell.classList.add("overdue");
+        }
 
-    title.textContent = `Tareas del ${dateStr}`;
+        if (hasToday) {
+            cell.classList.add("today");
+        }
 
-    list.innerHTML = "";
+        let html =
+            `<div class="calendar-number">${day}</div>`;
 
-    if (tasks.length === 0) {
-        list.innerHTML = "<p>No hay tareas</p>";
-    } else {
-        tasks.forEach(task => {
-            const div = document.createElement("div");
-            div.className = "list-group-item";
+        if (tasks.length > 0) {
 
-            div.innerHTML = `
-                <strong>${task.text}</strong><br>
-                <small>${task.priority} - ${task.category}</small>
-            `;
+            html += `<div class="calendar-dots">`;
 
-            list.appendChild(div);
-        });
-    }
-    
+            tasks.slice(0, 3).forEach(task => {
 
-    panel.classList.remove("hidden");
-});
-        let html = `<div class="calendar-number">${day}</div>`;
+                let dotClass = "dot-medium";
 
-        tasks.forEach(task => {
+                if (task.priority === "Alta") {
+                    dotClass = "dot-high";
+                }
 
-            let color = "";
+                if (task.priority === "Baja") {
+                    dotClass = "dot-low";
+                }
 
-            if (task.priority === "Alta") color = "red";
-            else if (task.priority === "Media") color = "orange";
-            else color = "green";
+                html += `
+                    <span class="calendar-dot ${dotClass}"></span>
+                `;
 
-            html += `
-                <div class="calendar-task">
-                    <span class="priority-dot" style="background:${color}"></span>
-                    ${task.text}
-                </div>
-            `;
-        });
+            });
+
+            if (tasks.length > 3) {
+                html += `
+                    <span class="more-tasks">
+                        +${tasks.length - 3}
+                    </span>
+                `;
+            }
+
+            html += `</div>`;
+        }
 
         cell.innerHTML = html;
+
+        cell.addEventListener("click", () => {
+
+            const panel =
+                document.getElementById("dayTasksPanel");
+
+            const list =
+                document.getElementById("dayTasksList");
+
+            const title =
+                document.getElementById("dayTasksTitle");
+
+            const prettyDate =
+                new Date(dateStr + "T00:00:00")
+                .toLocaleDateString(
+                    "es-ES",
+                    {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long"
+                    }
+                );
+
+            title.textContent =
+                `📅 ${prettyDate}`;
+
+            list.innerHTML = "";
+
+            if (tasks.length === 0) {
+
+                list.innerHTML =
+                    "<p>No hay tareas para este día</p>";
+
+            } else {
+
+                tasks.forEach(task => {
+
+                    let priorityClass =
+                        "modal-priority-medium";
+
+                    let priorityText =
+                        "🟡 Media";
+
+                    if (task.priority === "Alta") {
+                        priorityClass =
+                            "modal-priority-high";
+
+                        priorityText =
+                            "🔴 Alta";
+                    }
+
+                    if (task.priority === "Baja") {
+                        priorityClass =
+                            "modal-priority-low";
+
+                        priorityText =
+                            "🟢 Baja";
+                    }
+
+                    const div =
+                        document.createElement("div");
+
+                    div.className =
+                        "calendar-modal-task-item";
+
+                    div.innerHTML = `
+    <div class="calendar-modal-task-info">
+
+        <strong>
+            ${task.text}
+        </strong>
+
+        <span class="${priorityClass}">
+            ${priorityText}
+        </span>
+
+    </div>
+
+    <button
+        class="calendar-delete-btn"
+        onclick="deleteTaskFromCalendar(${task.id})"
+    >
+        🗑️
+    </button>
+`;
+
+                    list.appendChild(div);
+
+                });
+
+            }
+
+            panel.classList.remove("hidden");
+
+        });
+
         grid.appendChild(cell);
     }
 }
-
 
 /* =========================
    CAMBIO DE MES
@@ -732,53 +1153,47 @@ document
     }
 );
 /* =========================
-   TEMA OSCURO
+   TEMA CLARO / OSCURO
 ========================= */
 
 const savedTheme =
-    localStorage.getItem("theme");
+localStorage.getItem("theme") || "dark";
 
-if (savedTheme === "dark") {
+if(savedTheme === "dark"){
 
-    document.body.classList.add(
-        "dark-mode"
-    );
-
+    document.body.classList.add("dark-mode");
     themeToggle.checked = true;
+
+} else {
+
+    document.body.classList.remove("dark-mode");
+    themeToggle.checked = false;
 
 }
 
-themeToggle.addEventListener(
-    "change",
-    () => {
+themeToggle.addEventListener("change", () => {
 
-        if (themeToggle.checked) {
+    if(themeToggle.checked){
 
-            document.body.classList.add(
-                "dark-mode"
-            );
+        document.body.classList.add("dark-mode");
 
-            localStorage.setItem(
-                "theme",
-                "dark"
-            );
+        localStorage.setItem(
+            "theme",
+            "dark"
+        );
 
-        } else {
+    } else {
 
-            document.body.classList.remove(
-                "dark-mode"
-            );
+        document.body.classList.remove("dark-mode");
 
-            localStorage.setItem(
-                "theme",
-                "light"
-            );
-
-        }
+        localStorage.setItem(
+            "theme",
+            "light"
+        );
 
     }
-);
 
+});
 /* =========================
    INICIO
 ========================= */
@@ -861,3 +1276,65 @@ document.querySelectorAll(".menu a").forEach(link => {
 
 // reajustar al cambiar tamaño pantalla
 window.addEventListener("resize", initSidebarState);
+function updateHeroHeader(){
+
+    const greeting =
+    document.getElementById(
+        "heroGreeting"
+    );
+
+    const currentDate =
+    document.getElementById(
+        "currentDate"
+    );
+
+    const currentDay =
+    document.getElementById(
+        "currentDay"
+    );
+
+    if(!greeting) return;
+
+    const hour =
+    new Date().getHours();
+
+    let text =
+    "Buenos días";
+
+    if(hour >= 12){
+        text =
+        "Buenas tardes";
+    }
+
+    if(hour >= 19){
+        text =
+        "Buenas noches";
+    }
+
+    greeting.textContent =
+    `${text}, ${user} 👋`;
+
+    const now =
+    new Date();
+
+    currentDate.textContent =
+    now.toLocaleDateString(
+        "es-ES",
+        {
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+        }
+    );
+
+    currentDay.textContent =
+    now.toLocaleDateString(
+        "es-ES",
+        {
+            weekday:"long"
+        }
+    );
+
+}
+
+updateHeroHeader();
